@@ -32,4 +32,20 @@ function markPaid(req, res) {
     res.json({ success: true });
 }
 
-module.exports = { saveUdhaar, getAllUdhaar, markPaid };
+// ✅ NAYA: Single udhaar delete
+function deleteUdhaar(req, res) {
+    try {
+        const { id } = req.params;
+        const result = db.prepare(`DELETE FROM udhaar WHERE id = ?`).run(id);
+        
+        if (result.changes === 0) {
+            return res.status(404).json({ error: 'Record nahi mila' });
+        }
+        
+        res.json({ success: true, message: 'Record delete ho gaya' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+}
+
+module.exports = { saveUdhaar, getAllUdhaar, markPaid, deleteUdhaar };
